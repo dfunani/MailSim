@@ -3,7 +3,7 @@ window.addEventListener('DOMContentLoaded', function () {
   document.querySelector('#inbox').addEventListener('click', () => load_mailbox('inbox'));
   document.querySelector('#sent').addEventListener('click', () => load_mailbox('sent'));
   document.querySelector('#archived').addEventListener('click', () => load_mailbox('archive'));
-  document.querySelector('#compose').addEventListener('click', () => { compose_email(null) });
+  document.querySelector('#compose').addEventListener('click', () => { compose_email('') });
 
   load_mailbox('inbox');
 });
@@ -23,7 +23,7 @@ function compose_email(mail) {
   }
   else {
     document.querySelector('#compose-recipients').value = mail.sender;
-    document.querySelector('#compose-subject').value = mail.subject;
+    document.querySelector('#compose-subject').value = `RE: ${mail.subject}`;
     document.querySelector('#compose-body').value = `On ${mail.timestamp} ${mail.sender} wrote: ${mail.body}`;
   }
 
@@ -35,10 +35,7 @@ function compose_email(mail) {
         subject: document.querySelector('#compose-subject').value,
         body: document.querySelector('#compose-body').value
       })
-    })
-      .then((response) => {
-        load_mailbox('sent');
-      })
+    }).then(((result) => result.json())).then((response) => console.log(response)).catch(() => console.log('fail'))
   };
 }
 
